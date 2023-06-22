@@ -1,8 +1,8 @@
-import cv2 as cv
+import cv2
+import cv3 as cv
 import numpy as np
 import os
 import sys
-import platform
 from pynput.keyboard import *
 
 def on_press(key):
@@ -19,33 +19,24 @@ def finish(key):
 		os._exit(0)
 
 def main():
-
-	vc = None
-
-	if platform.system() == 'Windows':
-		vc = cv.VideoCapture(0,cv.CAP_DSHOW)
-
-	elif platform.system() == 'Linux':
-		vc = cv.VideoCapture(0)
+	
+	vc = cv.VideoCapture(0)
 
 	if vc.isOpened():
-		rval, frame = vc.read()
-	else:
-		rval = False
+		frame = vc.read()
 
-	if rval:
 		listener.start()
 
-	while rval:
-		rval, frame = vc.read()
-		print(toASCII(frame))
+		while True :
+			frame = vc.read()
+			print(toASCII(frame))
 		
 
 	sys.exit()
 
-def toASCII(frame, cols = 120, rows = 35):
+def toASCII(frame, cols = 240, rows = 70):
 
-	frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+	frame = cv.cvtColor(frame, code=cv2.COLOR_BGR2GRAY)
 	height, width = frame.shape
 	cell_width = width / cols
 	cell_height = height / rows
@@ -62,7 +53,7 @@ def toASCII(frame, cols = 120, rows = 35):
 	return result
 
 def grayToChar(gray):
-  CHAR_LIST = ' .:-=+*#%@' # Replace by " .',;:clodxkO0KXNWM" if you want more precision.
+	CHAR_LIST = ".',;:clodxkO0KXNWM" # Replace by " .',;:clodxkO0KXNWM" if you want more precision  .:-=+*#%@
 	num_chars = len(CHAR_LIST)
 	return CHAR_LIST[
 		min(
